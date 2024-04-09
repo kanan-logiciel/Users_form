@@ -1,0 +1,18 @@
+.header-bar {
+  width: 100%;
+  padding: 2px;
+  background-color: rgb(173, 192, 204);
+}
+
+.logo {
+  font-weight: bold;
+  font-family: system-ui;
+  font-size: 45px;
+  color: rgb(30, 69, 87);
+}
+
+.main {
+  margin: auto;
+  margin-left: 40%;
+  background-color: rgb(173, 192, 204);
+}

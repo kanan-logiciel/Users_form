@@ -1,0 +1,13 @@
+.list-table {
+  margin-top: 6%;
+  width: 50%;
+  float: left;
+}
+.second-form {
+  margin-top: 6%;
+  width: 40%;
+  border-radius: 4px;
+  float: right;
+  margin-right: 8%;
+  background-color: rgb(213, 225, 236);
+}

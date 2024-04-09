@@ -1,0 +1,15 @@
+.main-content {
+  background-color: rgb(233, 228, 228);
+}
+
+.list-parts li {
+  list-style-type: none;
+  text-decoration: none;
+  color: grey;
+}
+
+.footer-content h5 {
+  font-size: 18px;
+  margin-left: 10%;
+  color: rgb(82, 80, 80);
+}
