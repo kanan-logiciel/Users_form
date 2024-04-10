@@ -1,13 +1,28 @@
 .list-table {
-  margin-top: 6%;
+  margin-top: 3%;
   width: 50%;
   float: left;
 }
 .second-form {
-  margin-top: 6%;
+  margin-top: 3%;
   width: 40%;
   border-radius: 4px;
   float: right;
   margin-right: 8%;
   background-color: rgb(213, 225, 236);
+}
+
+.content-form {
+  width: 30%;
+  background-color: rgb(214, 226, 231);
+  margin-top: 2%;
+  border-radius: 5px;
+}
+
+.form_group {
+  margin-right: 30%;
+}
+
+.form_group-btn {
+  margin-right: 60%;
 }
