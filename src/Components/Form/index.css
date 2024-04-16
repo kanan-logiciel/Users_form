@@ -9,7 +9,7 @@
   border-radius: 4px;
   float: right;
   margin-right: 8%;
-  background-color: rgb(214, 226, 231);
+  background-color: rgb(231, 238, 241);
 }
 
 .content-form {
@@ -25,4 +25,8 @@
 
 .form_group-btn {
   margin-right: 60%;
+}
+
+.pagination {
+  clear: both;
 }

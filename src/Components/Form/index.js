@@ -14,7 +14,7 @@ const generateFakeUsers = () => {
   const users = [];
 
   for (let i = 0; i < 50; i++) {
-    const randomId = Math.floor(Math.random() * 900) + 100; // Random ID between 100 and 999
+    const randomId = Math.floor(Math.random() * 900) + 100;
     users.push({
       id: randomId,
       firstName: faker.person.firstName(),
@@ -37,13 +37,10 @@ function FormData() {
   const [editedRowIndex, setEditedRowIndex] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
 
-  // To handle edit click for form
-  const firstNameRef = useRef(null);
+  // To handle edit click for form with pagination
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Number of items per page
-
-  // ... other states and functions
+  const itemsPerPage = 7;
 
   // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -53,15 +50,12 @@ function FormData() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleEditClick = (index) => {
-    const actualIndex = indexOfFirstItem + index; // Adjust the index based on the current page
+    const actualIndex = indexOfFirstItem + index;
     setEditedRowIndex(actualIndex);
     setNewRow(currentItems[index]);
     setShowEditForm(true);
 
     // Focus on the firstName input field when the edit form is shown
-    if (firstNameRef.current) {
-      firstNameRef.current.focus();
-    }
   };
 
   //To submit and edit the user data by form
@@ -232,27 +226,12 @@ function FormData() {
           </tbody>
         </Table>
 
-        <Pagination>
-          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
-            (_, index) => (
-              <Pagination.Item
-                key={index}
-                active={index + 1 === currentPage}
-                onClick={() => paginate(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            )
-          )}
-        </Pagination>
-
         <div className="second-form">
           {showEditForm && (
             <Form onSubmit={submit}>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">First Name</InputGroup.Text>
                 <Form.Control
-                  ref={firstNameRef}
                   aria-label="Username"
                   aria-describedby="basic-addon1"
                   value={newRow.firstName}
@@ -317,6 +296,19 @@ function FormData() {
             </Form>
           )}
         </div>
+        <Pagination className="pagination">
+          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
+            (_, index) => (
+              <Pagination.Item
+                key={index}
+                active={index + 1 === currentPage}
+                onClick={() => paginate(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            )
+          )}
+        </Pagination>
       </div>
       <br />
     </Container>

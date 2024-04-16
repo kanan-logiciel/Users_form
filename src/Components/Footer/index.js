@@ -8,33 +8,37 @@ function Footer() {
       <Container>
         <Row className="footer-content">
           <Col md={3}>
-            <h5>main</h5>
+            <h5>About Us</h5>
             <ul className="list-parts">
-              <li>abc </li>
-              <li>abc </li>
-              <li>abc </li>
+              <li>our story </li>
+              <li>vision </li>
+              <li>team </li>
             </ul>
           </Col>
           <Col md={3}>
-            <h5>main</h5>
+            <h5>Services</h5>
             <ul className="list-parts">
-              <li>abc </li>
-              <li>abc </li>
+              <li>Web Design</li>
+              <li>Development</li>
+              <li>Marketing</li>
+              <li>Consulting</li>
             </ul>
           </Col>
           <Col md={3}>
-            <h5>main</h5>
+            <h5>About Us</h5>
             <ul className="list-parts">
-              <li>abc </li>
-              <li>abc </li>
+              <li>our story </li>
+              <li>vision </li>
+              <li>team </li>
             </ul>
           </Col>
           <Col md={3}>
-            <h5>main</h5>
+            <h5>Services</h5>
             <ul className="list-parts">
-              <li>abc </li>
-              <li>abc </li>
-              <li>abc </li>
+              <li>Web Design</li>
+              <li>Development</li>
+              <li>Marketing</li>
+              <li>Consulting</li>
             </ul>
           </Col>
         </Row>
