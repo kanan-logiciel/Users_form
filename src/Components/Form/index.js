@@ -4,12 +4,30 @@ import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { faker } from "@faker-js/faker";
 import InputMask from "react-input-mask";
+import Pagination from "react-bootstrap/Pagination";
+
+// Generate fake user data
+const generateFakeUsers = () => {
+  const users = [];
+
+  for (let i = 0; i < 50; i++) {
+    const randomId = Math.floor(Math.random() * 900) + 100; // Random ID between 100 and 999
+    users.push({
+      id: randomId,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email(),
+    });
+  }
+  return users;
+};
 
 // Function to render the form
 function FormData() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(generateFakeUsers());
   const [newRow, setNewRow] = useState({
     firstName: "",
     lastName: "",
@@ -19,13 +37,34 @@ function FormData() {
   const [editedRowIndex, setEditedRowIndex] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
 
+  // To handle edit click for form
+  const firstNameRef = useRef(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Number of items per page
+
+  // ... other states and functions
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleEditClick = (index) => {
-    console.log("handleEditClick", index);
-    setEditedRowIndex(index);
-    setNewRow(data[index]);
+    const actualIndex = indexOfFirstItem + index; // Adjust the index based on the current page
+    setEditedRowIndex(actualIndex);
+    setNewRow(currentItems[index]);
     setShowEditForm(true);
+
+    // Focus on the firstName input field when the edit form is shown
+    if (firstNameRef.current) {
+      firstNameRef.current.focus();
+    }
   };
 
+  //To submit and edit the user data by form
   const submit = (event) => {
     event.preventDefault();
 
@@ -47,7 +86,6 @@ function FormData() {
         setData(updatedData);
         setEditedRowIndex(null); // Reset editedRowIndex after editing
       }
-
       // Reset newRow
       setNewRow({
         id: "",
@@ -118,10 +156,15 @@ function FormData() {
     const countryCode = event.target.value;
     setSelectedCountry(countryCode);
 
-    // Update the phone number input to include the selected country code
+    // Check if newRow.phone exists and is a string before splitting
+    const splitPhone =
+      typeof newRow.phone === "string" && newRow.phone.includes(" ")
+        ? newRow.phone.split(" ")
+        : [""];
+
     setNewRow((prevRow) => ({
       ...prevRow,
-      phone: `+${countryCode} ${prevRow.phone.split(" ")[1] || ""}`,
+      phone: `+${countryCode} ${splitPhone[1] || ""}`,
     }));
   };
 
@@ -134,18 +177,16 @@ function FormData() {
               <th>ID</th>
               <th>First Name</th>
               <th>Last Name</th>
-              <th>Phone</th>
               <th>Email</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => (
+            {currentItems.map((row, index) => (
               <tr key={index}>
                 <td>{row.id}</td>
                 <td>{row.firstName}</td>
                 <td>{row.lastName}</td>
-                <td>{row.phone}</td>
                 <td>{row.email}</td>
                 <td>
                   <button
@@ -190,12 +231,28 @@ function FormData() {
             </tr>
           </tbody>
         </Table>
+
+        <Pagination>
+          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
+            (_, index) => (
+              <Pagination.Item
+                key={index}
+                active={index + 1 === currentPage}
+                onClick={() => paginate(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            )
+          )}
+        </Pagination>
+
         <div className="second-form">
           {showEditForm && (
             <Form onSubmit={submit}>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">First Name</InputGroup.Text>
                 <Form.Control
+                  ref={firstNameRef}
                   aria-label="Username"
                   aria-describedby="basic-addon1"
                   value={newRow.firstName}
