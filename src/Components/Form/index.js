@@ -182,21 +182,21 @@ function FormData() {
   ];
 
   const [selectedCountry, setSelectedCountry] = useState("");
-  const handleCountryChange = (event) => {
-    const countryCode = event.target.value;
-    setSelectedCountry(countryCode);
+  // const handleCountryChange = (event) => {
+  //   const countryCode = event.target.value;
+  //   setSelectedCountry(countryCode);
 
-    // Check if newRow.phone exists and is a string before splitting
-    const splitPhone =
-      typeof newRow.phone === "string" && newRow.phone.includes(" ")
-        ? newRow.phone.split(" ")
-        : [""];
+  //   // Check if newRow.phone exists and is a string before splitting
+  //   const splitPhone =
+  //     typeof newRow.phone === "string" && newRow.phone.includes(" ")
+  //       ? newRow.phone.split(" ")
+  //       : [""];
 
-    setNewRow((prevRow) => ({
-      ...prevRow,
-      phone: `+${countryCode} ${splitPhone[1] || ""}`,
-    }));
-  };
+  //   setNewRow((prevRow) => ({
+  //     ...prevRow,
+  //     phone: `+${countryCode} ${splitPhone[1] || ""}`,
+  //   }));
+  // };
 
   // To disable the edit button when form is in edit mode
   const disableButtons = () => {
