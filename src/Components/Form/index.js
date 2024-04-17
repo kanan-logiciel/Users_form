@@ -58,43 +58,76 @@ function FormData() {
     setShowEditForm(true);
   };
 
-  //To submit and edit the user data by form
   const submit = (event) => {
     event.preventDefault();
 
-    if (
-      newRow.firstName.trim() !== "" &&
-      newRow.lastName.trim() !== "" &&
-      newRow.email.trim() !== "" &&
-      newRow.phone.trim() !== ""
-    ) {
-      if (editedRowIndex === null) {
-        // Adding new row
-        const randomId = Math.floor(Math.random() * 900) + 100;
-        const newData = [...data, { ...newRow, id: randomId }];
-        setData(newData);
-      } else {
-        // Editing existing row
-        const updatedData = [...data];
-        updatedData[editedRowIndex] = { ...newRow };
-        setData(updatedData);
-        setEditedRowIndex(null); // Reset editedRowIndex after editing
+    let formValid = true;
+    Object.values(newRow).forEach((value) => {
+      if (value.trim() === "") {
+        formValid = false;
       }
-      // Reset newRow
-      setNewRow({
-        id: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-      });
-      setShowEditForm(false);
+    });
+
+    if (formValid) {
+      // Your existing submit logic
+      if (
+        newRow.firstName.trim() !== "" &&
+        newRow.lastName.trim() !== "" &&
+        newRow.email.trim() !== "" &&
+        newRow.phone.trim() !== ""
+      ) {
+        if (editedRowIndex === null) {
+          // Adding new row
+          const randomId = Math.floor(Math.random() * 900) + 100;
+          const newData = [...data, { ...newRow, id: randomId }];
+          setData(newData);
+        } else {
+          // Editing existing row
+          const updatedData = [...data];
+          updatedData[editedRowIndex] = { ...newRow };
+          setData(updatedData);
+          setEditedRowIndex(null); // Reset editedRowIndex after editing
+        }
+        // Reset newRow
+        setNewRow({
+          id: "",
+          firstName: "",
+          lastName: "",
+          email: "",
+          country: "",
+          phone: "",
+        });
+        setShowEditForm(false);
+      }
+    } else {
+      // Display a general error message or handle it as per your requirement
+      alert("All fields are required");
     }
   };
 
-  // To handle input change
+  // To handle input change with validations
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    // Validation
+    let error = "";
+    if (name === "firstName" && value.trim() === "") {
+      error = "First name is required";
+    } else if (name === "lastName" && value.trim() === "") {
+      error = "Last name is required";
+    } else if (name === "email" && value.trim() === "") {
+      error = "Email is required";
+    } else if (name === "country" && value.trim() === "") {
+      error = "Country is required";
+    } else if (name === "phone" && value.trim() === "") {
+      error = "Phone is required";
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+
     setNewRow((prevRow) => ({
       ...prevRow,
       [name]: value,
@@ -174,6 +207,15 @@ function FormData() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
+  // To set validations for input fields in form
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    country: "",
+    phone: "",
+  });
+
   return (
     <Container fluid>
       <div>
@@ -200,6 +242,7 @@ function FormData() {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
+              <th>Phone</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -210,6 +253,7 @@ function FormData() {
                 <td>{row.firstName}</td>
                 <td>{row.lastName}</td>
                 <td>{row.email}</td>
+                <td>{row.phone}</td>
                 <td>
                   <button
                     className="btn btn-danger"
@@ -269,7 +313,11 @@ function FormData() {
                   value={newRow.firstName}
                   name="firstName"
                   onChange={handleChange}
+                  required
                 />
+                {errors.firstName && (
+                  <div className="error">{errors.firstName}</div>
+                )}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Last Name</InputGroup.Text>
@@ -279,7 +327,11 @@ function FormData() {
                   value={newRow.lastName}
                   name="lastName"
                   onChange={handleChange}
+                  required
                 />
+                {errors.lastName && (
+                  <div className="error">{errors.lastName}</div>
+                )}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Email</InputGroup.Text>
@@ -289,15 +341,20 @@ function FormData() {
                   value={newRow.email}
                   name="email"
                   onChange={handleChange}
+                  required
                 />
+                {errors.email && <div className="error">{errors.email}</div>}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Country</InputGroup.Text>
                 <Form.Select
                   aria-label="Country"
                   placeholder="select"
-                  onChange={handleCountryChange}
+                  name="country"
+                  onChange={handleChange}
+                  required
                 >
+                  <option value="">Select Country</option>
                   {countries.map((country, index) => (
                     <option key={index} value={country.code}>
                       {country.name}
@@ -305,6 +362,7 @@ function FormData() {
                   ))}
                 </Form.Select>
               </InputGroup>
+              {errors.country && <div className="error">{errors.country}</div>}
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Phone</InputGroup.Text>
                 <InputMask
@@ -317,6 +375,7 @@ function FormData() {
                     <Form.Control {...inputProps} placeholder="Phone Number" />
                   )}
                 </InputMask>
+                {errors.phone && <div className="error">{errors.phone}</div>}
               </InputGroup>
               <button className="btn btn-secondary" onClick={cancelEdit}>
                 Cancel
