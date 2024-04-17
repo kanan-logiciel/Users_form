@@ -11,7 +11,7 @@ import InputMask from "react-input-mask";
 import Pagination from "react-bootstrap/Pagination";
 import Modal from "react-bootstrap/Modal";
 
-// Generate fake user data
+// Generate fake user data in table
 const generateFakeUsers = () => {
   const users = [];
 
@@ -92,6 +92,7 @@ function FormData() {
     }
   };
 
+  // To handle input change
   const handleChange = (event) => {
     const { name, value } = event.target;
     setNewRow((prevRow) => ({
@@ -148,7 +149,6 @@ function FormData() {
   ];
 
   const [selectedCountry, setSelectedCountry] = useState("");
-
   const handleCountryChange = (event) => {
     const countryCode = event.target.value;
     setSelectedCountry(countryCode);
@@ -170,6 +170,7 @@ function FormData() {
     return showEditForm;
   };
 
+  // To get modal after deleting user data from table
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
@@ -341,6 +342,10 @@ function FormData() {
               </Pagination.Item>
             )
           )}
+          &nbsp;&nbsp;
+          <span>
+            <i>out of ({data.length})</i>
+          </span>
         </Pagination>
       </div>
       <br />

@@ -29,4 +29,6 @@
 
 .pagination {
   clear: both;
+  align-items: center;
+  font-size: 14px;
 }
