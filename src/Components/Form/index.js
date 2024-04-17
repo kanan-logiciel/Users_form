@@ -4,7 +4,7 @@ import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import InputMask from "react-input-mask";
 import Pagination from "react-bootstrap/Pagination";
@@ -38,7 +38,6 @@ function FormData() {
   const [showEditForm, setShowEditForm] = useState(false);
 
   // To handle edit click for form with pagination
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
@@ -49,13 +48,12 @@ function FormData() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Edit click
   const handleEditClick = (index) => {
     const actualIndex = indexOfFirstItem + index;
     setEditedRowIndex(actualIndex);
     setNewRow(currentItems[index]);
     setShowEditForm(true);
-
-    // Focus on the firstName input field when the edit form is shown
   };
 
   //To submit and edit the user data by form
@@ -162,6 +160,11 @@ function FormData() {
     }));
   };
 
+  // To disable the edit button when form is in edit mode
+  const disableButtons = () => {
+    return showEditForm;
+  };
+
   return (
     <Container fluid>
       <div>
@@ -186,6 +189,7 @@ function FormData() {
                   <button
                     className="btn btn-danger"
                     onClick={() => deleteRow(index)}
+                    disabled={disableButtons()}
                   >
                     Delete
                   </button>
@@ -193,6 +197,7 @@ function FormData() {
                   <button
                     className="btn btn-secondary"
                     onClick={() => handleEditClick(index)}
+                    disabled={disableButtons()}
                   >
                     Edit
                   </button>
@@ -213,6 +218,7 @@ function FormData() {
                       setEditedRowIndex(null);
                       setShowEditForm(true);
                     }}
+                    disabled={disableButtons()}
                   >
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
                     <path
