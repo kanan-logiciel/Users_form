@@ -2,12 +2,14 @@ import "./index.css";
 import React from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import InputMask from "react-input-mask";
 import Pagination from "react-bootstrap/Pagination";
+import Modal from "react-bootstrap/Modal";
 
 // Generate fake user data
 const generateFakeUsers = () => {
@@ -37,11 +39,11 @@ function FormData() {
   const [editedRowIndex, setEditedRowIndex] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
 
-  // To handle edit click for form with pagination
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
-  // Pagination
+  // Pagination calculation
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -100,9 +102,12 @@ function FormData() {
 
   // To delete selected row
   const deleteRow = (index) => {
+    // Calculate the adjusted index based on the current page
+    const adjustedIndex = indexOfFirstItem + index;
     const newData = [...data];
-    newData.splice(index, 1);
+    newData.splice(adjustedIndex, 1);
     setData(newData);
+    setShow(true);
   };
 
   // To cancel editing the row
@@ -165,9 +170,28 @@ function FormData() {
     return showEditForm;
   };
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
   return (
     <Container fluid>
       <div>
+        {/* Modal of delete confirmtion goes here  */}
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>User deleted!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            All data of user deleted successfully, user no more available.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleClose}>
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Table goes here */}
         <Table striped bordered hover className="list-table">
           <thead>
             <tr>
@@ -232,6 +256,7 @@ function FormData() {
           </tbody>
         </Table>
 
+        {/* Form goes here */}
         <div className="second-form">
           {showEditForm && (
             <Form onSubmit={submit}>
@@ -302,6 +327,8 @@ function FormData() {
             </Form>
           )}
         </div>
+
+        {/* Pagination for table goes here  */}
         <Pagination className="pagination">
           {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
             (_, index) => (
