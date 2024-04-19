@@ -1,11 +1,10 @@
 import "./index.css";
-import React from "react";
+import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import InputMask from "react-input-mask";
 import Pagination from "react-bootstrap/Pagination";
@@ -27,7 +26,6 @@ const generateFakeUsers = () => {
   return users;
 };
 
-// Function to render the form
 function FormData() {
   const [data, setData] = useState(generateFakeUsers());
   const [newRow, setNewRow] = useState({
@@ -38,19 +36,14 @@ function FormData() {
   });
   const [editedRowIndex, setEditedRowIndex] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
-
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-
-  // Pagination calculation
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Edit click
   const handleEditClick = (index) => {
     const actualIndex = indexOfFirstItem + index;
     setEditedRowIndex(actualIndex);
@@ -61,82 +54,34 @@ function FormData() {
   const submit = (event) => {
     event.preventDefault();
 
-    let formValid = true;
-    Object.values(newRow).forEach((value) => {
-      if (value.trim() === "") {
-        formValid = false;
+    if (
+      newRow.firstName.trim() !== "" &&
+      newRow.lastName.trim() !== "" &&
+      newRow.email.trim() !== "" &&
+      newRow.phone.trim() !== ""
+    ) {
+      if (editedRowIndex === null) {
+        const randomId = Math.floor(Math.random() * 900) + 100;
+        const newData = [...data, { ...newRow, id: randomId }];
+        setData(newData);
+      } else {
+        const updatedData = [...data];
+        updatedData[editedRowIndex] = { ...newRow };
+        setData(updatedData);
+        setEditedRowIndex(null);
       }
-    });
-
-    if (formValid) {
-      // Your existing submit logic
-      if (
-        newRow.firstName.trim() !== "" &&
-        newRow.lastName.trim() !== "" &&
-        newRow.email.trim() !== "" &&
-        newRow.phone.trim() !== ""
-      ) {
-        if (editedRowIndex === null) {
-          // Adding new row
-          const randomId = Math.floor(Math.random() * 900) + 100;
-          const newData = [...data, { ...newRow, id: randomId }];
-          setData(newData);
-        } else {
-          // Editing existing row
-          const updatedData = [...data];
-          updatedData[editedRowIndex] = { ...newRow };
-          setData(updatedData);
-          setEditedRowIndex(null); // Reset editedRowIndex after editing
-        }
-        // Reset newRow
-        setNewRow({
-          id: "",
-          firstName: "",
-          lastName: "",
-          email: "",
-          country: "",
-          phone: "",
-        });
-        setShowEditForm(false);
-      }
-    } else {
-      // Display a general error message or handle it as per your requirement
-      alert("All fields are required");
+      setNewRow({
+        id: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+      });
+      setShowEditForm(false);
     }
   };
 
-  // To handle input change with validations
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    // Validation
-    let error = "";
-    if (name === "firstName" && value.trim() === "") {
-      error = "First name is required";
-    } else if (name === "lastName" && value.trim() === "") {
-      error = "Last name is required";
-    } else if (name === "email" && value.trim() === "") {
-      error = "Email is required";
-    } else if (name === "country" && value.trim() === "") {
-      error = "Country is required";
-    } else if (name === "phone" && value.trim() === "") {
-      error = "Phone is required";
-    }
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-
-    setNewRow((prevRow) => ({
-      ...prevRow,
-      [name]: value,
-    }));
-  };
-
-  // To delete selected row
   const deleteRow = (index) => {
-    // Calculate the adjusted index based on the current page
     const adjustedIndex = indexOfFirstItem + index;
     const newData = [...data];
     newData.splice(adjustedIndex, 1);
@@ -144,10 +89,9 @@ function FormData() {
     setShow(true);
   };
 
-  // To cancel editing the row
   const cancelEdit = () => {
     setShowEditForm(false);
-    setEditedRowIndex(null); // Reset editedRowIndex when canceling
+    setEditedRowIndex(null);
     setNewRow({
       id: "",
       firstName: "",
@@ -157,69 +101,73 @@ function FormData() {
     });
   };
 
-  //To set selected country code accordingly
   const getPhoneMask = (countryCode) => {
     switch (countryCode) {
-      case "1": // USA
+      case "1":
         return "+1 (999) 999-9999";
-      case "44": // UK
+      case "44":
         return "+44 (999) 9999-9999";
-      case "91": // IND
+      case "91":
         return "+91 (9999) 999-999";
-      case "63": // AUS
+      case "63":
         return "+63 (999) 999-9999";
-      default: // Default mask
+      default:
         return "+ (999) 999-99-99";
     }
   };
 
-  //to set selected country code
   const countries = [
     { code: "1", name: "USA" },
     { code: "44", name: "UK" },
     { code: "91", name: "IND" },
     { code: "63", name: "AUS" },
   ];
-
   const [selectedCountry, setSelectedCountry] = useState("");
-  // const handleCountryChange = (event) => {
-  //   const countryCode = event.target.value;
-  //   setSelectedCountry(countryCode);
 
-  //   // Check if newRow.phone exists and is a string before splitting
-  //   const splitPhone =
-  //     typeof newRow.phone === "string" && newRow.phone.includes(" ")
-  //       ? newRow.phone.split(" ")
-  //       : [""];
+  const handleCountryChange = (event) => {
+    const countryCode = event.target.value;
+    setSelectedCountry(countryCode);
 
-  //   setNewRow((prevRow) => ({
-  //     ...prevRow,
-  //     phone: `+${countryCode} ${splitPhone[1] || ""}`,
-  //   }));
-  // };
+    handleChange({
+      target: {
+        name: "phone",
+        value: `+${countryCode} ${newRow.phone.split(" ")[1] || ""}`,
+      },
+    });
+  };
 
-  // To disable the edit button when form is in edit mode
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNewRow((prevRow) => ({
+      ...prevRow,
+      [name]: value,
+    }));
+
+    // Adjust phone number based on country code if needed
+    if (name === "country") {
+      const countryCode = value;
+      const splitPhone =
+        typeof newRow.phone === "string" && newRow.phone.includes(" ")
+          ? newRow.phone.split(" ")
+          : [""];
+
+      setNewRow((prevRow) => ({
+        ...prevRow,
+        phone: `+${countryCode} ${splitPhone[1] || ""}`,
+      }));
+    }
+  };
+
   const disableButtons = () => {
     return showEditForm;
   };
 
-  // To get modal after deleting user data from table
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-
-  // To set validations for input fields in form
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    country: "",
-    phone: "",
-  });
 
   return (
     <Container fluid>
       <div>
-        {/* Modal of delete confirmtion goes here  */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>User deleted!</Modal.Title>
@@ -234,7 +182,6 @@ function FormData() {
           </Modal.Footer>
         </Modal>
 
-        {/* Table goes here */}
         <Table striped bordered hover className="list-table">
           <thead>
             <tr>
@@ -242,7 +189,6 @@ function FormData() {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
-              <th>Phone</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -253,7 +199,6 @@ function FormData() {
                 <td>{row.firstName}</td>
                 <td>{row.lastName}</td>
                 <td>{row.email}</td>
-                <td>{row.phone}</td>
                 <td>
                   <button
                     className="btn btn-danger"
@@ -301,7 +246,6 @@ function FormData() {
           </tbody>
         </Table>
 
-        {/* Form goes here */}
         <div className="second-form">
           {showEditForm && (
             <Form onSubmit={submit}>
@@ -313,11 +257,7 @@ function FormData() {
                   value={newRow.firstName}
                   name="firstName"
                   onChange={handleChange}
-                  required
                 />
-                {errors.firstName && (
-                  <div className="error">{errors.firstName}</div>
-                )}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Last Name</InputGroup.Text>
@@ -327,11 +267,7 @@ function FormData() {
                   value={newRow.lastName}
                   name="lastName"
                   onChange={handleChange}
-                  required
                 />
-                {errors.lastName && (
-                  <div className="error">{errors.lastName}</div>
-                )}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Email</InputGroup.Text>
@@ -341,9 +277,7 @@ function FormData() {
                   value={newRow.email}
                   name="email"
                   onChange={handleChange}
-                  required
                 />
-                {errors.email && <div className="error">{errors.email}</div>}
               </InputGroup>
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Country</InputGroup.Text>
@@ -352,7 +286,6 @@ function FormData() {
                   placeholder="select"
                   name="country"
                   onChange={handleChange}
-                  required
                 >
                   <option value="">Select Country</option>
                   {countries.map((country, index) => (
@@ -362,7 +295,6 @@ function FormData() {
                   ))}
                 </Form.Select>
               </InputGroup>
-              {errors.country && <div className="error">{errors.country}</div>}
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Phone</InputGroup.Text>
                 <InputMask
@@ -375,20 +307,18 @@ function FormData() {
                     <Form.Control {...inputProps} placeholder="Phone Number" />
                   )}
                 </InputMask>
-                {errors.phone && <div className="error">{errors.phone}</div>}
               </InputGroup>
               <button className="btn btn-secondary" onClick={cancelEdit}>
                 Cancel
               </button>
               &nbsp;&nbsp;
-              <button className="form_group-btn btn btn-primary" type="submit">
+              <button className="btn btn-primary" type="submit">
                 Submit
               </button>
             </Form>
           )}
         </div>
 
-        {/* Pagination for table goes here  */}
         <Pagination className="pagination">
           {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
             (_, index) => (
