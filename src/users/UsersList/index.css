@@ -1,11 +1,11 @@
 .content {
-  background-color: antiquewhite;
+  background-color: rgb(220, 222, 223);
   width: 50%;
   float: left;
 }
 
 .pagination {
-  background-color: aliceblue;
+  background-color: pink;
   align-items: center;
   font-size: 14px;
 }

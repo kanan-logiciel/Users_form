@@ -3,7 +3,8 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import { Table } from "react-bootstrap";
 
-function UsersList({ users, onclickDelete, onclickEdit }) {
+function UsersList({ users, onClickDelete, onClickEdit }) {
+  // console.log("Received Users:", users);
   return (
     <Container fluid>
       <div className="content">
@@ -19,8 +20,8 @@ function UsersList({ users, onclickDelete, onclickEdit }) {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
+            {users.map((user, index) => (
+              <tr key={user.id ? user.id : index}>
                 <td>{user.id}</td>
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
@@ -28,20 +29,21 @@ function UsersList({ users, onclickDelete, onclickEdit }) {
                 <td>
                   <button
                     className="btn btn-danger"
-                    onClick={() => onclickDelete(user.id)}
+                    onClick={() => onClickDelete(user.id)}
                   >
                     Delete
                   </button>
                   &nbsp;&nbsp;
                   <button
                     className="btn btn-secondary"
-                    // onclick={() => onclickEdit(user)}
+                    onClick={() => onClickEdit(user)}
                   >
                     Edit
                   </button>
                 </td>
               </tr>
             ))}
+
             <tr>
               <td colSpan="6">
                 <span>
@@ -52,6 +54,7 @@ function UsersList({ users, onclickDelete, onclickEdit }) {
                     fill="currentColor"
                     className="bi bi-person-plus"
                     viewBox="0 0 16 16"
+                    onClick={() => onClickEdit(true)}
                   >
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
                     <path
