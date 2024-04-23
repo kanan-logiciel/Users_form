@@ -1,35 +1,36 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
 import { Container, Form, InputGroup } from "react-bootstrap";
 
-function AddEditUser({ user, onSubmit, onCancel }) {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    country: "",
-    phone: "",
-  });
+import { getRandomId } from "../helper";
+import "./index.css";
 
-  // Set initial form data if user prop is provided
+const USER = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  country: "",
+  phone: "",
+};
+
+function AddEditUser({ user, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({ ...USER });
+
   useEffect(() => {
-    if (user) {
-      setFormData(user);
-    }
+    if (user) setFormData({ ...USER, ...user });
   }, [user]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // console.log("Form submitted:", formData);
-    onSubmit(formData);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit({ id: getRandomId(), ...formData });
   };
 
   return (
@@ -37,45 +38,40 @@ function AddEditUser({ user, onSubmit, onCancel }) {
       <div className="form-div">
         <Form onSubmit={handleSubmit}>
           <InputGroup className="p-4">
-            <InputGroup.Text id="basic-addon1">First Name</InputGroup.Text>
+            <InputGroup.Text>First Name</InputGroup.Text>
             <Form.Control
-              aria-label="Username"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
             />
           </InputGroup>
           <InputGroup className="p-4">
-            <InputGroup.Text id="basic-addon1">Last Name</InputGroup.Text>
+            <InputGroup.Text>Last Name</InputGroup.Text>
             <Form.Control
-              aria-label="Username"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
             />
           </InputGroup>
           <InputGroup className="p-4">
-            <InputGroup.Text id="basic-addon1">Email</InputGroup.Text>
+            <InputGroup.Text>Email</InputGroup.Text>
             <Form.Control
-              aria-label="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
             />
           </InputGroup>
           <InputGroup className="p-4">
-            <InputGroup.Text id="basic-addon1">Country</InputGroup.Text>
+            <InputGroup.Text>Country</InputGroup.Text>
             <Form.Control
-              aria-label="country"
               name="country"
               value={formData.country}
               onChange={handleChange}
             />
           </InputGroup>
           <InputGroup className="p-4">
-            <InputGroup.Text id="basic-addon1">Phone</InputGroup.Text>
+            <InputGroup.Text>Phone</InputGroup.Text>
             <Form.Control
-              aria-label="Phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}

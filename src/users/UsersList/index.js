@@ -21,7 +21,7 @@ function UsersList({ users, onClickDelete, onClickEdit }) {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={user.id ? user.id : index}>
+              <tr key={index}>
                 <td>{user.id}</td>
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
