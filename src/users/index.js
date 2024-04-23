@@ -10,9 +10,14 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showAddEditUserForm, setShowAddEditUserForm] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => {
+    setShow(false);
+  };
 
   const initializeFakeUsers = () => {
-    const fakeUsers = new Array(5).fill(null).map(() => {
+    const fakeUsers = new Array(20).fill(null).map(() => {
       return {
         id: getRandomId(),
         firstName: faker.person.firstName(),
@@ -38,6 +43,7 @@ function Users() {
     const updatedUsers = users.filter((user) => user.id !== id);
 
     setUsers(updatedUsers);
+    setShow(true);
   };
 
   /**
@@ -56,6 +62,7 @@ function Users() {
   };
 
   const onSubmit = (formData) => {
+    console.log("Form Data:", formData, selectedUser);
     const addNewUser = () => {
       setUsers((prevUsers) => [
         ...prevUsers,
@@ -78,6 +85,10 @@ function Users() {
     setShowAddEditUserForm(false);
   };
 
+  const disableButtons = () => {
+    return showAddEditUserForm;
+  };
+
   return (
     <div>
       <h1>User Management</h1>
@@ -85,6 +96,9 @@ function Users() {
         users={users}
         onClickDelete={handleDeleteUser}
         onClickEdit={onClickEdit}
+        ondisableButtons={disableButtons}
+        handleClose={handleClose}
+        show={show}
       />
       {showAddEditUserForm && (
         <AddEditUser

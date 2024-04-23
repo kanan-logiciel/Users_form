@@ -1,14 +1,46 @@
 import "./index.css";
 import React from "react";
 import Container from "react-bootstrap/Container";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 
-function UsersList({ users, onClickDelete, onClickEdit }) {
+function UsersList({
+  users,
+  onClickDelete,
+  onClickEdit,
+  ondisableButtons,
+  handleClose,
+  show,
+}) {
   // console.log("Received Users:", users);
+
+  const handleDelete = (id) => () => {
+    onClickDelete(id);
+  };
+
+  const handleEdit = (user) => () => {
+    onClickEdit(user);
+  };
+
   return (
     <Container fluid>
       <div className="content">
         <h2>User List</h2>
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>User deleted!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            All data of user deleted successfully, user no more available.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleClose}>
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -29,14 +61,16 @@ function UsersList({ users, onClickDelete, onClickEdit }) {
                 <td>
                   <button
                     className="btn btn-danger"
-                    onClick={() => onClickDelete(user.id)}
+                    onClick={handleDelete(user.id)}
+                    disabled={ondisableButtons(user)}
                   >
                     Delete
                   </button>
                   &nbsp;&nbsp;
                   <button
                     className="btn btn-secondary"
-                    onClick={() => onClickEdit(user)}
+                    onClick={handleEdit(user)}
+                    disabled={ondisableButtons(user)}
                   >
                     Edit
                   </button>
@@ -54,7 +88,7 @@ function UsersList({ users, onClickDelete, onClickEdit }) {
                     fill="currentColor"
                     className="bi bi-person-plus"
                     viewBox="0 0 16 16"
-                    onClick={() => onClickEdit(true)}
+                    onClick={() => onClickEdit(null)}
                   >
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
                     <path
