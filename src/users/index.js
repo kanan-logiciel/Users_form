@@ -17,7 +17,7 @@ function Users() {
   };
 
   const initializeFakeUsers = () => {
-    const fakeUsers = new Array(20).fill(null).map(() => {
+    const fakeUsers = new Array(50).fill(null).map(() => {
       return {
         id: getRandomId(),
         firstName: faker.person.firstName(),
@@ -85,20 +85,38 @@ function Users() {
     setShowAddEditUserForm(false);
   };
 
+  // Disable buttons
   const disableButtons = () => {
     return showAddEditUserForm;
   };
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
+
+  const paginate = (array, currentPage, itemsPerPage) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return array.slice(startIndex, endIndex);
+  };
+
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const paginatedUsers = paginate(users, currentPage, itemsPerPage);
 
   return (
     <div>
       <h1>User Management</h1>
       <UsersList
-        users={users}
+        paginatedUsers={paginatedUsers}
         onClickDelete={handleDeleteUser}
         onClickEdit={onClickEdit}
         ondisableButtons={disableButtons}
         handleClose={handleClose}
         show={show}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
       />
       {showAddEditUserForm && (
         <AddEditUser

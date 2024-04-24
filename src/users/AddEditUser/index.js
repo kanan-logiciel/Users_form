@@ -36,6 +36,7 @@ function AddEditUser({ user, onSubmit, onCancel }) {
   return (
     <Container fluid>
       <div className="form-div">
+        <h2>User Details:</h2>
         <Form onSubmit={handleSubmit}>
           <InputGroup className="p-4">
             <InputGroup.Text>First Name</InputGroup.Text>
