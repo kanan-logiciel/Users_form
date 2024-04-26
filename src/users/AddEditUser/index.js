@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Container, Form, InputGroup } from "react-bootstrap";
-
 import { getRandomId } from "../helper";
 import "./index.css";
+import { useDispatch, useSelector } from "react-redux";
 
 const USER = {
   firstName: "",
@@ -12,25 +12,30 @@ const USER = {
   phone: "",
 };
 
-function AddEditUser({ user, onSubmit, onCancel }) {
-  const [formData, setFormData] = useState({ ...USER });
+function AddEditUser() {
+  const { selectedUser: user, formData } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) setFormData({ ...USER, ...user });
-  }, [user]);
+    dispatch({ type: "users/setFormData", payload: { ...USER } });
+  }, [user, dispatch]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    dispatch({ type: "users/setFormData", payload: { [name]: value } });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit({ id: getRandomId(), ...formData });
+    dispatch({
+      type: "users/setFormData",
+      payload: { ...user, id: getRandomId() },
+    });
+  };
+
+  const handleCancel = () => {
+    dispatch({ type: "users/setSelectedUser", payload: null });
+    dispatch({ type: "users/setShowAddEditUserForm", payload: false });
   };
 
   return (
@@ -78,7 +83,7 @@ function AddEditUser({ user, onSubmit, onCancel }) {
               onChange={handleChange}
             />
           </InputGroup>
-          <button className="btn btn-secondary" onClick={onCancel}>
+          <button className="btn btn-secondary" onClick={handleCancel}>
             Cancel
           </button>
           &nbsp;&nbsp;

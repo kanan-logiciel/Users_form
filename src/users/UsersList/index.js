@@ -1,33 +1,18 @@
 import "./index.css";
 import React from "react";
-import Container from "react-bootstrap/Container";
-import { Table, Button } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
+import { Container, Table, Button, Modal } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 
-function UsersList({
-  users,
-  paginatedUsers = [],
-  onClickDelete,
-  onClickEdit,
-  ondisableButtons,
-  handleClose,
-  show,
-  totalPages,
-  setCurrentPage,
-  currentPage,
-}) {
-  // console.log("Received Users:", users);
+function UsersList({ paginatedUsers }) {
+  const dispatch = useDispatch();
 
-  const handleDelete = (id) => () => {
-    onClickDelete(id);
+  const handleDelete = (id) => {
+    dispatch({ type: "users/deleteUser", payload: id });
   };
 
-  const handleEdit = (user) => () => {
-    onClickEdit(user);
-  };
-
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handleEdit = (user) => {
+    dispatch({ type: "users/setSelectedUser", payload: user });
+    dispatch({ type: "users/setShowAddEditUserForm", payload: true });
   };
 
   return (
@@ -35,7 +20,7 @@ function UsersList({
       <div className="content">
         <h2>User List</h2>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={false} onHide={() => {}}>
           <Modal.Header closeButton>
             <Modal.Title>User deleted!</Modal.Title>
           </Modal.Header>
@@ -43,7 +28,7 @@ function UsersList({
             All data of user deleted successfully, user no more available.
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={handleClose}>
+            <Button variant="danger" onClick={() => {}}>
               OK
             </Button>
           </Modal.Footer>
@@ -70,16 +55,14 @@ function UsersList({
                   <td>
                     <button
                       className="btn btn-danger"
-                      onClick={handleDelete(user.id)}
-                      disabled={ondisableButtons(user)}
+                      onClick={() => handleDelete(user.id)}
                     >
                       Delete
                     </button>
                     &nbsp;&nbsp;
                     <button
                       className="btn btn-secondary"
-                      onClick={handleEdit(user)}
-                      disabled={ondisableButtons(user)}
+                      onClick={() => handleEdit(user)}
                     >
                       Edit
                     </button>
@@ -97,7 +80,7 @@ function UsersList({
                       fill="currentColor"
                       className="bi bi-person-plus"
                       viewBox="0 0 16 16"
-                      onClick={() => onClickEdit(null)}
+                      onClick={() => handleEdit(null)}
                     >
                       <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
                       <path
@@ -114,23 +97,7 @@ function UsersList({
         <div className="pagination">
           {/* Pagination */}
           <nav>
-            <ul className="pagination">
-              {[...Array(totalPages)].map((_, index) => (
-                <li
-                  key={index}
-                  className={`page-item ${
-                    currentPage === index + 1 ? "active" : ""
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => handlePageClick(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <ul className="pagination">{/* Pagination logic goes here */}</ul>
           </nav>
         </div>
       </div>

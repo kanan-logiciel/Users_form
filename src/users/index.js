@@ -1,19 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { faker } from "@faker-js/faker";
 
 import UsersList from "./UsersList";
 import AddEditUser from "./AddEditUser";
 
 import { getRandomId } from "./helper";
+import { useDispatch, useSelector } from "react-redux";
 
 function Users() {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showAddEditUserForm, setShowAddEditUserForm] = useState(false);
-  const [show, setShow] = useState(false);
+  const users = useSelector((state) => state.users.users);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "users/setUsers", payload: initializeFakeUsers() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClose = () => {
-    setShow(false);
+    dispatch({ type: "users/setIsShowConfDelete", payload: false });
   };
 
   const initializeFakeUsers = () => {
@@ -26,13 +31,8 @@ function Users() {
       };
     });
 
-    setUsers(fakeUsers);
+    return fakeUsers;
   };
-
-  useEffect(() => {
-    initializeFakeUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   /**
    * Delete selected user from list
@@ -42,8 +42,8 @@ function Users() {
   const handleDeleteUser = (id) => {
     const updatedUsers = users.filter((user) => user.id !== id);
 
-    setUsers(updatedUsers);
-    setShow(true);
+    dispatch({ type: "users/setUsers", payload: updatedUsers });
+    dispatch({ type: "users/setIsShowConfDelete", payload: true });
   };
 
   /**
@@ -52,46 +52,46 @@ function Users() {
    * @param {Object} user
    */
   const onClickEdit = (user) => {
-    setSelectedUser(user);
-    setShowAddEditUserForm(true);
+    dispatch({ type: "users/setSelectedUser", payload: user });
+    dispatch({ type: "users/setShowAddEditUserForm", payload: true });
   };
 
   const onCancelAddEdit = () => {
-    setSelectedUser(null);
-    setShowAddEditUserForm(false);
+    dispatch({ type: "users/setSelectedUser", payload: null });
+    dispatch({ type: "users/setShowAddEditUserForm", payload: false });
   };
 
   const onSubmit = (formData) => {
-    console.log("Form Data:", formData, selectedUser);
     const addNewUser = () => {
-      setUsers((prevUsers) => [
-        ...prevUsers,
-        {
-          id: getRandomId(),
-          ...formData,
-        },
-      ]);
+      dispatch({
+        type: "users/setUsers",
+        payload: [...users, formData],
+        id: getRandomId(),
+      });
     };
 
     const updateUser = () => {
-      setUsers((prevUsers) =>
-        prevUsers.map((u) => (u.id === selectedUser.id ? formData : u))
-      );
+      dispatch({
+        type: "users/setUsers",
+        payload: [...users, formData],
+      });
     };
 
-    selectedUser ? updateUser() : addNewUser();
+    dispatch({ type: "users/setSelectedUser", payload: null })
+      ? updateUser()
+      : addNewUser();
 
-    setSelectedUser(null);
-    setShowAddEditUserForm(false);
+    dispatch({ type: "users/setSelectedUser", payload: null });
+    dispatch({ type: "users/setShowAddEditUserForm", payload: false });
   };
 
   // Disable buttons
   const disableButtons = () => {
-    return showAddEditUserForm;
+    dispatch({ type: "users/setShowAddEditUserForm", payload: false });
   };
 
   // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
   const paginate = (array, currentPage, itemsPerPage) => {
@@ -102,27 +102,30 @@ function Users() {
 
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
-  const paginatedUsers = paginate(users, currentPage, itemsPerPage);
+  dispatch({
+    type: "users/setCurrentPage",
+    payload: paginate(users, itemsPerPage),
+  });
 
   return (
     <div>
       <h1>User Management</h1>
       <UsersList
-        paginatedUsers={paginatedUsers}
+        paginatedUsers={users}
         onClickDelete={handleDeleteUser}
         onClickEdit={onClickEdit}
         ondisableButtons={disableButtons}
         handleClose={handleClose}
-        show={show}
+        // show={users}
         totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
+        setCurrentPage={users}
+        currentPage={users}
       />
-      {showAddEditUserForm && (
+      {users && (
         <AddEditUser
-          user={selectedUser}
-          onSubmit={onSubmit}
-          onCancel={onCancelAddEdit}
+          user={users}
+          // onSubmit={onSubmit}
+          // onCancel={onCancelAddEdit}
         />
       )}
     </div>
