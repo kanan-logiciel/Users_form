@@ -56,7 +56,7 @@ function UsersList() {
       <div className="content">
         <h2>User List</h2>
 
-        {/* Modal goes here  */}
+        {/* Delete Confirmation Modal goes here  */}
         <Modal show={isShowConfDelete} onHide={handleModalClose}>
           <Modal.Header closeButton>
             <Modal.Title>Confirmation</Modal.Title>
@@ -75,7 +75,7 @@ function UsersList() {
           </Modal.Footer>
         </Modal>
 
-        {/* Table goes here  */}
+        {/* Table of Users List goes here  */}
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -137,7 +137,7 @@ function UsersList() {
         </Table>
         <div className="pagination">
           {/* Pagination */}
-          <nav>
+          <nav className="nav-Pagination">
             <ul className="pagination">
               <li className="page-item">
                 <button

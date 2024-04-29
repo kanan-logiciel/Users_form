@@ -46,6 +46,7 @@ function AddEditUser() {
 
   // Handle form submission (add or update user)
   const onSubmit = (event) => {
+    console.log("formData", formData);
     event.preventDefault();
 
     // Add new user

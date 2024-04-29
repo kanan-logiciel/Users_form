@@ -25,7 +25,6 @@ function Users() {
         email: faker.internet.email(),
       };
     });
-
     return fakeUsers;
   };
 
