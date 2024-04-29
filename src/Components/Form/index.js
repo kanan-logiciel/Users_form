@@ -122,19 +122,19 @@ function FormData() {
     { code: "91", name: "IND" },
     { code: "63", name: "AUS" },
   ];
-  const [selectedCountry, setSelectedCountry] = useState("");
+  // const [selectedCountry, setSelectedCountry] = useState("");
 
-  const handleCountryChange = (event) => {
-    const countryCode = event.target.value;
-    setSelectedCountry(countryCode);
+  // const handleCountryChange = (event) => {
+  //   const countryCode = event.target.value;
+  //   setSelectedCountry(countryCode);
 
-    handleChange({
-      target: {
-        name: "phone",
-        value: `+${countryCode} ${newRow.phone.split(" ")[1] || ""}`,
-      },
-    });
-  };
+  //   handleChange({
+  //     target: {
+  //       name: "phone",
+  //       value: `+${countryCode} ${newRow.phone.split(" ")[1] || ""}`,
+  //     },
+  //   });
+  // };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -298,7 +298,7 @@ function FormData() {
               <InputGroup className="p-4">
                 <InputGroup.Text id="basic-addon1">Phone</InputGroup.Text>
                 <InputMask
-                  mask={getPhoneMask(selectedCountry)}
+                  mask={getPhoneMask}
                   value={newRow.phone}
                   name="phone"
                   onChange={handleChange}

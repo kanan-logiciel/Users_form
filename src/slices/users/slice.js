@@ -15,23 +15,18 @@ export const usersSlice = createSlice({
   },
   reducers: {
     setUsers: (state, action) => {
-      // console.log(action);
       state.users = action.payload;
     },
     setSelectedUser: (state, action) => {
-      // console.log(action);
       state.selectedUser = action.payload;
     },
     setShowAddEditUserForm: (state, action) => {
-      // console.log(action);
       state.showAddEditUserForm = action.payload;
     },
     setIsShowConfDelete: (state, action) => {
-      // console.log(action);
       state.isShowConfDelete = action.payload;
     },
     setFormData: (state, action) => {
-      // console.log(action);
       state.formData = {
         ...state.formData,
         ...action.payload,
