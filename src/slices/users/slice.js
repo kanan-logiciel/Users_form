@@ -7,8 +7,11 @@ export const usersSlice = createSlice({
     selectedUser: null,
     showAddEditUserForm: false,
     isShowConfDelete: false,
-    currentPage: 1,
     formData: {},
+    isDisabledButtons: false,
+    currentPage: 1,
+    usersPerPage: 7,
+    userToDelete: null,
   },
   reducers: {
     setUsers: (state, action) => {
@@ -27,16 +30,25 @@ export const usersSlice = createSlice({
       // console.log(action);
       state.isShowConfDelete = action.payload;
     },
-    setCurrentPage: (state, action) => {
-      // console.log(action);
-      state.currentPage = action.payload;
-    },
     setFormData: (state, action) => {
       // console.log(action);
       state.formData = {
         ...state.formData,
         ...action.payload,
       };
+    },
+    setIsDisabledButtons: (state, action) => {
+      state.isDisabledButtons = action.payload;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    setUserToDelete: (state, action) => {
+      state.userToDelete = action.payload;
+    },
+
+    clearUserToDelete: (state) => {
+      state.userToDelete = null;
     },
   },
 });
@@ -49,6 +61,7 @@ export const {
   setIsShowConfDelete,
   setCurrentPage,
   setFormData,
+  setIsDisabledButtons,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;
