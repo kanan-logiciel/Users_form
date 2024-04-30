@@ -27,10 +27,7 @@ export const usersSlice = createSlice({
       state.isShowConfDelete = action.payload;
     },
     setFormData: (state, action) => {
-      state.formData = {
-        ...state.formData,
-        ...action.payload,
-      };
+      state.formData = action.payload;
     },
     setIsDisabledButtons: (state, action) => {
       state.isDisabledButtons = action.payload;

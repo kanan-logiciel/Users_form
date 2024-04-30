@@ -21,6 +21,7 @@ function AddEditUser() {
     formData,
     users,
   } = useSelector((state) => state.users);
+
   const dispatch = useDispatch();
 
   // Set form data based on selected user
@@ -35,7 +36,10 @@ function AddEditUser() {
   // Handle form data changes
   const handleChange = (event) => {
     const { name, value } = event.target;
-    dispatch({ type: "users/setFormData", payload: { [name]: value } });
+    dispatch({
+      type: "users/setFormData",
+      payload: { ...formData, [name]: value },
+    });
   };
 
   // Handle form Cancellation
@@ -46,7 +50,6 @@ function AddEditUser() {
 
   // Handle form submission (add or update user)
   const onSubmit = (event) => {
-    console.log("formData", formData);
     event.preventDefault();
 
     // Add new user
@@ -65,11 +68,10 @@ function AddEditUser() {
       });
     };
 
-    // Update or add new user
-    dispatch({ type: "users/setSelectedUser", payload: null })
-      ? addNewUser()
-      : updateUser();
+    console.log(formData);
+    formData.id ? updateUser() : addNewUser();
 
+    dispatch({ type: "users/setSelectedUser", payload: null });
     dispatch({ type: "users/setFormData", payload: { ...USER } });
     dispatch({ type: "users/setShowAddEditUserForm", payload: false });
     dispatch({ type: "users/setIsDisabledButtons", payload: false });
