@@ -7,7 +7,7 @@ export const getRandomId = () => {
 };
 
 // Show Toast after delete
-export const notifyDel = () => toast("Data deleted successfully!");
+export const notifyDel = () => toast("User data deleted successfully!");
 
 // Show success toast after submit
-export const notify = () => toast("Data saved successfully!");
+export const notify = () => toast("User data saved successfully!");
