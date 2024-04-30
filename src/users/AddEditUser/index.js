@@ -2,7 +2,8 @@ import "./index.css";
 import React, { useEffect } from "react";
 import { Container, Form, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getRandomId, notify } from "../helper";
+import { getRandomId } from "../helper";
+import { showSuccess } from "../notification";
 
 // Initialize form data
 const USER = {
@@ -77,6 +78,8 @@ function AddEditUser() {
     dispatch({ type: "users/setFormData", payload: { ...USER } });
     dispatch({ type: "users/setShowAddEditUserForm", payload: false });
     dispatch({ type: "users/setIsDisabledButtons", payload: false });
+
+    showSuccess("User added successfully");
   };
 
   return (
@@ -131,11 +134,7 @@ function AddEditUser() {
               Cancel
             </button>
             &nbsp;&nbsp;
-            <button
-              className="form_group-btn btn btn-primary"
-              type="submit"
-              onClick={notify}
-            >
+            <button className="form_group-btn btn btn-primary" type="submit">
               Submit
             </button>
           </Form>

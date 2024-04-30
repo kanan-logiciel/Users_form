@@ -2,8 +2,9 @@ import React from "react";
 
 import Users from "./users";
 
-import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 function App() {
   return (
