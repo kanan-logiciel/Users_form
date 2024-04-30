@@ -2,7 +2,7 @@ import "./index.css";
 import React, { useEffect } from "react";
 import { Container, Form, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getRandomId } from "../helper";
+import { getRandomId, notify } from "../helper";
 
 // Initialize form data
 const USER = {
@@ -58,6 +58,7 @@ function AddEditUser() {
         type: "users/setUsers",
         payload: [...users, { ...formData, id: getRandomId() }],
       });
+      dispatch({ type: "users/setShowSuccessToast", payload: true });
     };
 
     // Update user
@@ -66,6 +67,7 @@ function AddEditUser() {
         type: "users/setUsers",
         payload: users.map((u) => (u.id === formData.id ? formData : u)),
       });
+      dispatch({ type: "users/setShowSuccessToast", payload: true });
     };
 
     console.log(formData);
@@ -129,7 +131,11 @@ function AddEditUser() {
               Cancel
             </button>
             &nbsp;&nbsp;
-            <button className="form_group-btn btn btn-primary" type="submit">
+            <button
+              className="form_group-btn btn btn-primary"
+              type="submit"
+              onClick={notify}
+            >
               Submit
             </button>
           </Form>

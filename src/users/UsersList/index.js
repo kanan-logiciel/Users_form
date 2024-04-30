@@ -2,6 +2,7 @@ import "./index.css";
 import React from "react";
 import { Container, Table, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { notifyDel } from "../helper";
 
 function UsersList() {
   // Get state and dispatch from Redux
@@ -26,6 +27,8 @@ function UsersList() {
     const updatedUsers = users.filter((user) => user.id !== id);
     dispatch({ type: "users/setUsers", payload: updatedUsers });
     handleModalClose();
+    dispatch({ type: "users/setShowDelToast", payload: true });
+    notifyDel();
   };
 
   // Handle modal cancellation

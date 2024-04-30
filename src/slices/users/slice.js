@@ -38,7 +38,6 @@ export const usersSlice = createSlice({
     setUserToDelete: (state, action) => {
       state.userToDelete = action.payload;
     },
-
     clearUserToDelete: (state) => {
       state.userToDelete = null;
     },

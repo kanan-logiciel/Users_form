@@ -6,6 +6,7 @@ import AddEditUser from "./AddEditUser";
 
 import { getRandomId } from "./helper";
 import { useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 function Users() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function Users() {
   return (
     <div>
       <h1>User Management</h1>
+      <ToastContainer />
       <UsersList />
       <AddEditUser />
     </div>
